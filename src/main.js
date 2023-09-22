@@ -329,5 +329,52 @@ const createLoadMoreButtonTemplate = () => `
    <button class="load-more" type="button">load more</button>
   `;
 
+const COUNT_TIMES = 3;
+
+class MyError extends Error {
+  constructor(...args) {
+    super(...args);
+    this.name = this.constructor.name;
+  }
+}
+
+class TemplateError extends MyError { }
+
+const render = (container, template, place = 'beforeend') => {
+  try {
+    if (container) {
+      container.insertAdjacentHTML(place, template);
+    }
+    if (!template) {
+      throw new TemplateError('empty template, please provide html template');
+    }
+
+  } catch (err) {
+    if (err instanceof TemplateError) {
+      console.error(err.message);
+    }
+    throw err;
+  }
+
+};
+
+
+const root = document.querySelector('.main');
+
+render(root, createMenuTemplate('TASKMANAGER'));
+render(root, createFilterTemplate());
+render(root, createBoardTemplate());
+
+const board = document.querySelector('.board');
+const boardTasksContainer = document.querySelector('.board__tasks');
+
+render(board, createSortTemplate(), 'afterbegin');
+render(boardTasksContainer, createAddEditFormTaskTemplate());
+
+for (let i = 0; i < COUNT_TIMES; i++) {
+  render(boardTasksContainer, createTaskTemplate());
+}
+
+render(root, createLoadMoreButtonTemplate());
 
 
