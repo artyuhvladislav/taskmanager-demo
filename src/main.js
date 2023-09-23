@@ -1,48 +1,39 @@
-import {render} from './framework/render.js';
-import NewTaskButtonView from './view/new-task-button-view.js';
-import BoardPresenter from './presenter/board-presenter.js';
-import FilterPresenter from './presenter/filter-presenter.js';
-import TasksModel from './model/tasks-model.js';
-import FilterModel from './model/filter-model.js';
-import TasksApiService from './tasks-api-service.js';
+import { menu, filter, board, tasksList, task, addEditTask, sort, loadButton } from './components';
+import { TemplateError } from './errors';
 
-const AUTHORIZATION = 'Basic hS2sfS44wcl1sa2j';
-const END_POINT = 'https://20.ecmascript.pages.academy/task-manager';
+const COUNT_TIMES = 3;
 
-const siteMainElement = document.querySelector('.main');
-const siteHeaderElement = siteMainElement.querySelector('.main__control');
+const render = (container, template, place = 'beforeend') => {
+  try {
+    if (container) container.insertAdjacentHTML(place, template);
+    if (!template) throw new TemplateError();
+  } catch (err) {
+    if (err instanceof TemplateError) console.error(err.message);
+    throw err;
+  }
 
-const tasksModel = new TasksModel({
-  tasksApiService: new TasksApiService(END_POINT, AUTHORIZATION)
-});
-const filterModel = new FilterModel();
-const boardPresenter = new BoardPresenter({
-  boardContainer: siteMainElement,
-  tasksModel,
-  filterModel,
-  onNewTaskDestroy: handleNewTaskFormClose
-});
-const filterPresenter = new FilterPresenter({
-  filterContainer: siteMainElement,
-  filterModel,
-  tasksModel
-});
-const newTaskButtonComponent = new NewTaskButtonView({
-  onClick: handleNewTaskButtonClick
-});
+};
 
-function handleNewTaskFormClose() {
-  newTaskButtonComponent.element.disabled = false;
+const $root = document.querySelector('.main');
+
+render($root, menu('TASKMANAGER'));
+render($root, filter());
+render($root, board());
+
+const $board = document.querySelector('.board');
+
+render($board, sort(), 'afterbegin');
+render($board, tasksList());
+
+const $boardTasksList = document.querySelector('.board__tasks');
+
+render($boardTasksList, tasksList());
+render($boardTasksList, addEditTask());
+
+for (let i = 0; i < COUNT_TIMES; i++) {
+  render($boardTasksList, task());
 }
 
-function handleNewTaskButtonClick() {
-  boardPresenter.createTask();
-  newTaskButtonComponent.element.disabled = true;
-}
+render($root, loadButton());
 
-filterPresenter.init();
-boardPresenter.init();
-tasksModel.init()
-  .finally(() => {
-    render(newTaskButtonComponent, siteHeaderElement);
-  });
+
