@@ -1,0 +1,1 @@
+export { generateFilters as getFilterData } from './filter/filter';
