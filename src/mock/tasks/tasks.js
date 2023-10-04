@@ -4,24 +4,27 @@ const getRandomNumber = (upTo) => {
   return Math.round(Math.random() * upTo);
 };
 
-const generateTask = () => (
-  {
-    description: 'This is example of task edit. You can set date and chose repeating days and color.',
-    color: COLORS[getRandomNumber(COLORS.length)],
-    dueDate: {
-      date: new Date(Date.now() + 10000)
-    },
-    repeatingDays: Object.assign({}, repeatingDays, {
-      'mo': true
-    }),
-    isFavorite: Math.random() > 0.5,
-    isArchive: Math.random() > 0.5,
+export const task = {
+  generateSingleTask() {
+    return (
+      {
+        description: 'This is example of task edit. You can set date and chose repeating days and color.',
+        color: COLORS[getRandomNumber(COLORS.length - 1)],
+        dueDate: {
+          date: new Date(Date.now() + 10000)
+        },
+        repeatingDays: Object.assign({}, repeatingDays, {
+          'mo': true
+        }),
+        isFavorite: Math.random() > 0.5,
+        isArchive: Math.random() > 0.5,
+      }
+    );
+  },
+  generateTasks(length) {
+    return new Array(length).fill('').map(this.generateSingleTask);
   }
-);
-
-const generateTasksData = (length) => {
-  return new Array(length).fill('').map(generateTask);
 };
 
 
-export { generateTask, generateTasksData };
+
