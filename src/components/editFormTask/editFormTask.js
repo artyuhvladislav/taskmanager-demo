@@ -1,21 +1,25 @@
 import { COLORS } from '../../const';
+import { createElement } from '../../utils';
 
 
-const getColorsTemplate = COLORS.map((color, idx) => {
-  return `<input
-              type="radio"
-              id="color-${color}-${idx}"
-              class="card__color-input card__color-input--${color} visually-hidden"
-              name="color"
-              value="${color}"
-              ${color === COLORS[0] ? 'checked' : ''}
-            />
-            <label
-              for="color-${color}-${idx}"
-              class="card__color card__color--${color}"
-              >${color}</label
-            >`;
-}).join('\n');
+const getColorsTemplate = (taskColor) => {
+  return COLORS.map((color, idx) => {
+
+    return `<input
+                type="radio"
+                id="color-${color}-${idx}"
+                class="card__color-input card__color-input--${color} visually-hidden"
+                name="color"
+                value="${color}"
+                ${color === taskColor ? 'checked' : ''}
+              />
+              <label
+                for="color-${color}-${idx}"
+                class="card__color card__color--${color}"
+                >${color}</label
+              >`;
+  }).join('\n');
+};
 
 const getRepeatingDaysTemplate = (repeatingDays) => {
   if (!repeatingDays) return '';
@@ -60,8 +64,8 @@ const getDeadlineDate = (dueDate) => {
   );
 };
 
-export const createAddEditFormTaskTemplate = (options) => {
-  const { description, color, isFavorite, isArchive, repeatingDays, dueDate } = options;
+const createEditFormTaskTemplate = (task) => {
+  const { description, color, repeatingDays, dueDate } = task;
 
   const isRepeatingDaysText = !!repeatingDays ? 'YES' : 'NO';
   const isDeadlineText = !!dueDate ? 'YES' : 'NO';
@@ -100,7 +104,7 @@ export const createAddEditFormTaskTemplate = (options) => {
             <div class="card__colors-inner">
               <h3 class="card__colors-title">Color</h3>
               <div class="card__colors-wrap">
-                ${getColorsTemplate}
+                ${getColorsTemplate(color)}
               </div>
             </div>
           </div>
@@ -114,3 +118,26 @@ export const createAddEditFormTaskTemplate = (options) => {
   `
   );
 };
+
+export class EditFormTask {
+
+  constructor(task) {
+    this._task = task;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createEditFormTaskTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

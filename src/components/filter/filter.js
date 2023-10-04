@@ -1,3 +1,5 @@
+import { createElement } from '../../utils';
+
 const createFilterMarkup = () => {
   return (filter, idx) => {
     const { title, count } = filter;
@@ -17,10 +19,7 @@ const createFilterMarkup = () => {
   };
 };
 
-
-
-
-export const createFilterTemplate = (filters) => {
+const createFilterTemplate = (filters) => {
   const filterElements = filters.map(createFilterMarkup()).join('\n');
   return `
     <section class="main__filter filter container">
@@ -28,3 +27,26 @@ export const createFilterTemplate = (filters) => {
     </section>
     `;
 };
+
+export class Filter {
+
+  constructor(filters) {
+    this.filters = filters;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilterTemplate(this.filters);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

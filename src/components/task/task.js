@@ -1,7 +1,8 @@
 import { DEFAULT_COLOR, MONTHS } from '../../const';
+import { createElement } from '../../utils';
 
-export const createTaskTemplate = (options) => {
-  const { description, color, isFavorite, isArchive, repeatingDays, dueDate } = options;
+const createTaskTemplate = (task) => {
+  const { description, color, isFavorite, isArchive, repeatingDays, dueDate } = task;
 
   const date = `${dueDate?.date.getDate()} ${MONTHS[dueDate?.date.getMonth()]}`;
   const isExpired = dueDate.date < Date.now();
@@ -56,3 +57,26 @@ export const createTaskTemplate = (options) => {
     </article>
   `;
 };
+
+export class Task {
+
+  constructor(task) {
+    this._task = task;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTaskTemplate(this._task);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate(this._task));
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
