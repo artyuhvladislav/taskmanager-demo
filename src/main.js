@@ -1,61 +1,133 @@
-import { menu, filter, board, tasksList, task, addEditTask, sort, loadButton } from './components';
+import {
+  Menu, Filter, Board, TasksList, Task,
+  EditFormTask, Sort,
+  LoadButton, EmptyTaskList
+} from './components';
 import { COLORS, SHOW_ITEMS_ON_LOAD_MORE } from './const';
 import { TemplateError } from './errors';
-import { getFilterData, getTasksData } from './mock';
+import { task, getFilters } from './mock';
 
-const tasksData = getTasksData.generateTasksData(20);
-const filterData = getFilterData();
+const tasks = task.generateTasks(0);
+console.log(tasks);
+const filters = getFilters();
 let showItemsCount = SHOW_ITEMS_ON_LOAD_MORE;
 
-const render = (container, template, place = 'beforeend') => {
+const menuComponent = new Menu('TASKMANAGER');
+const filterComponent = new Filter(filters);
+const boardComponent = new Board();
+const loadButtonComponent = new LoadButton();
+
+
+const render = (container, nodeElement, place = 'beforeend') => {
   try {
-    if (container) container.insertAdjacentHTML(place, template);
-    if (!template) throw new TemplateError();
+    if (container) container.insertAdjacentElement(place, nodeElement);
+    if (!nodeElement) throw new TemplateError();
   } catch (err) {
     if (err instanceof TemplateError) console.error(err.message);
     throw err;
   }
 
 };
-const $root = document.querySelector('.main');
-render($root, menu('TASKMANAGER'));
-const $mainControl = document.querySelector('.main__control');
-render($mainControl, filter(filterData), 'afterend');
-render($root, board());
-const $board = document.querySelector('.board');
-render($board, sort(), 'afterbegin');
-render($board, tasksList());
-const $boardTasksList = document.querySelector('.board__tasks');
 
+const renderTask = (taskListElement, task) => {
 
+  const taskComponent = new Task(task);
+  const editTaskComponent = new EditFormTask(task);
 
-const renderTasks = (tasks) => {
-  tasks.forEach((options) => {
-    render($boardTasksList, task(options));
+  const replaceTaskToEdit = () => {
+    taskListElement.replaceChild(editTaskComponent.getElement(), taskComponent.getElement());
+  };
+
+  const replaceEditToTask = () => {
+    taskListElement.replaceChild(taskComponent.getElement(), editTaskComponent.getElement());
+  };
+
+  const onEscKeyDown = (e) => {
+    const isEscKey = e.key === 'Escape' || e.key === 'Esc';
+    if (isEscKey) {
+      replaceEditToTask();
+      $editBtn.removeEventListener('keydown', onEscKeyDown);
+    }
+  };
+
+  const $editBtn = taskComponent.getElement().querySelector('.card__btn.card__btn--edit');
+
+  $editBtn.addEventListener('click', () => {
+    replaceTaskToEdit();
+    document.addEventListener('keydown', onEscKeyDown);
+  });
+
+  editTaskComponent.getElement().querySelector('.card__save').addEventListener('click', (e) => {
+    e.preventDefault();
+    replaceEditToTask();
+    $editBtn.removeEventListener('keydown', onEscKeyDown);
+  });
+
+  render(taskListElement, taskComponent.getElement());
+};
+
+const renderTasks = (taskListComponent, tasks) => {
+  tasks.forEach((task) => {
+    renderTask(taskListComponent.getElement(), task);
   });
 };
-renderTasks(tasksData.slice(0, showItemsCount));
 
-const $addNewTaskBtn = document.querySelector('.control__button');
 
-const onClickAddNewTask = (e) => {
-  const taskDataObj = getTasksData.generateTask();
-  const options = Object.assign({}, taskDataObj, { color: COLORS[0] });
-  render($boardTasksList, addEditTask(options), 'afterbegin');
+const $root = document.querySelector('.main');
+render($root, menuComponent.getElement());
+render(menuComponent.getElement(), filterComponent.getElement(), 'afterend');
+render($root, boardComponent.getElement());
+
+const renderBoard = (boardComponent, tasks) => {
+  if (tasks.length === 0) {
+    const emptyTaskListComponent = new EmptyTaskList();
+    render(boardComponent.getElement(), emptyTaskListComponent.getElement());
+    return;
+  }
+  const sortComponent = new Sort();
+  const tasksListComponent = new TasksList();
+
+  render(boardComponent.getElement(), sortComponent.getElement());
+  render(boardComponent.getElement(), tasksListComponent.getElement());
+  renderTasks(tasksListComponent, tasks.slice(0, showItemsCount));
+  render($root, loadButtonComponent.getElement());
+
+  const onClickLoadMore = () => {
+    let prevCountItems = showItemsCount;
+    showItemsCount += SHOW_ITEMS_ON_LOAD_MORE;
+    const currentTasks = tasks.slice(prevCountItems, showItemsCount);
+    renderTasks(tasksListComponent, currentTasks);
+    if (showItemsCount >= tasks.length) {
+      loadButtonComponent.getElement().remove();
+      loadButtonComponent.removeElement();
+    };
+  };
+  loadButtonComponent.getElement().addEventListener('click', onClickLoadMore);
+
+
+  // TO DO
+  // refactor add new task feature
+  // does not work when ---> tasks = [];
+  const $addNewTaskBtn = menuComponent.getElement().querySelector('.control__button');
+
+  const onClickAddNewTask = () => {
+    const taskDataObj = task.generateSingleTask();
+    const taskObj = Object.assign({}, taskDataObj, { color: COLORS[0] });
+    const editTaskComponent = new EditFormTask(taskObj);
+    render(tasksListComponent.getElement(), editTaskComponent.getElement(), 'afterbegin');
+  };
+  $addNewTaskBtn.addEventListener('click', onClickAddNewTask);
 };
-$addNewTaskBtn.addEventListener('pointerdown', onClickAddNewTask);
 
-render($root, loadButton());
-const $loadMoreBtn = document.querySelector('.load-more');
-const onClickLoadMore = () => {
-  let prevCountItems = showItemsCount;
-  showItemsCount += SHOW_ITEMS_ON_LOAD_MORE;
-  const currentTaskData = tasksData.slice(prevCountItems, showItemsCount);
-  renderTasks(currentTaskData);
-  if (showItemsCount >= tasksData.length) $loadMoreBtn.remove();
-};
+renderBoard(boardComponent, tasks);
 
-$loadMoreBtn.addEventListener('click', onClickLoadMore);
+
+
+
+
+
+
+
 
 
 
