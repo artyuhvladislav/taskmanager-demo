@@ -1,2 +1,2 @@
-export { generateFilters as getFilterData } from './filter/filter';
-export * as getTasksData from './tasks/tasks';
+export { generateFilters as getFilters } from './filter/filter';
+export { task } from './tasks/tasks';
