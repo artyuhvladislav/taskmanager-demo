@@ -1,8 +1,9 @@
-export { createMenuTemplate as menu } from './menu/menu';
-export { createFilterTemplate as filter } from './filter/filter';
-export { createBoardTemplate as board } from './board/board';
-export { createTasksListTemplate as tasksList } from './tasksList/tasksList';
-export { createSortTemplate as sort } from './sort/sort';
-export { createTaskTemplate as task } from './task/task';
-export { createAddEditFormTaskTemplate as addEditTask } from './addEditTask/addEditTask';
-export { createLoadButtonTemplate as loadButton } from './loadButton/loadButton';
+export { Menu } from './menu/menu';
+export { EmptyTaskList } from './emptyTaskList/emptyTaskList';
+export { Filter } from './filter/filter';
+export { Board } from './board/board';
+export { TasksList } from './tasksList/tasksList';
+export { Sort } from './sort/sort';
+export { Task } from './task/task';
+export { EditFormTask } from './editFormTask/editFormTask';
+export { LoadButton } from './loadButton/loadButton';
