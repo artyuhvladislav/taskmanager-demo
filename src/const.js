@@ -1,12 +1,5 @@
 const COLORS = ['black', 'yellow', 'blue', 'green', 'pink'];
 
-const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
-  'August', 'September', 'October', 'November', 'December'];
-
-const DEFAULT_COLOR = 'black';
-
-const SHOW_ITEMS_ON_LOAD_MORE = 8;
-
 const FilterType = {
   ALL: 'all',
   OVERDUE: 'overdue',
@@ -35,24 +28,4 @@ const UpdateType = {
   INIT: 'INIT',
 };
 
-const repeatingDays = {
-  'mo': false,
-  'tu': false,
-  'we': false,
-  'th': false,
-  'fr': false,
-  'sa': false,
-  'su': false
-};
-
-export {
-  COLORS,
-  FilterType,
-  SortType,
-  UserAction,
-  UpdateType,
-  repeatingDays,
-  MONTHS,
-  DEFAULT_COLOR,
-  SHOW_ITEMS_ON_LOAD_MORE
-};
+export {COLORS, FilterType, SortType, UserAction, UpdateType};
