@@ -1,5 +1,5 @@
 import { DEFAULT_COLOR, MONTHS } from '../../const';
-import { createElement } from '../../utils';
+import { AbstractUiComponent } from '../../models/AbstractUiComponent/AbstractUiComponent';
 
 const createTaskTemplate = (task) => {
   const { description, color, isFavorite, isArchive, repeatingDays, dueDate } = task;
@@ -58,25 +58,20 @@ const createTaskTemplate = (task) => {
   `;
 };
 
-export class Task {
+export class Task extends AbstractUiComponent {
 
   constructor(task) {
+    super();
     this._task = task;
-    this._element = null;
   }
 
   getTemplate() {
     return createTaskTemplate(this._task);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate(this._task));
-    }
-    return this._element;
+  setOnClickHandler(cb) {
+    const $editBtn = this.getElement().querySelector('.card__btn.card__btn--edit');
+    $editBtn.addEventListener('click', cb);
   }
 
-  removeElement() {
-    this._element = null;
-  }
 }

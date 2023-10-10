@@ -1,5 +1,5 @@
 import { COLORS } from '../../const';
-import { createElement } from '../../utils';
+import { AbstractUiComponent } from '../../models/AbstractUiComponent/AbstractUiComponent';
 
 
 const getColorsTemplate = (taskColor) => {
@@ -119,25 +119,20 @@ const createEditFormTaskTemplate = (task) => {
   );
 };
 
-export class EditFormTask {
+export class EditFormTask extends AbstractUiComponent {
 
   constructor(task) {
+    super();
     this._task = task;
-    this._element = null;
   }
 
   getTemplate() {
     return createEditFormTaskTemplate(this._task);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+  setOnSubmitHandler(cb) {
+    const $submitBtn = this.getElement().querySelector('.card__save');
+    $submitBtn.addEventListener('click', cb);
   }
 
-  removeElement() {
-    this._element = null;
-  }
 }

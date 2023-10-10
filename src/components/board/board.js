@@ -1,27 +1,13 @@
-import { createElement } from '../../utils';
+import { AbstractUiComponent } from '../../models/AbstractUiComponent/AbstractUiComponent';
 
 const createBoardTemplate = () => `
   <section class="board container"></section>
   `;
 
-export class Board {
-
-  constructor() {
-    this._element = null;
-  }
+export class Board extends AbstractUiComponent {
 
   getTemplate() {
     return createBoardTemplate();
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }
