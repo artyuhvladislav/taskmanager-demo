@@ -1,4 +1,4 @@
-import { createElement } from '../../utils';
+import { AbstractUiComponent } from '../../models/AbstractUiComponent/AbstractUiComponent';
 
 const createFilterMarkup = () => {
   return (filter, idx) => {
@@ -28,25 +28,15 @@ const createFilterTemplate = (filters) => {
     `;
 };
 
-export class Filter {
+export class Filter extends AbstractUiComponent {
 
   constructor(filters) {
+    super();
     this.filters = filters;
-    this._element = null;
   }
 
   getTemplate() {
     return createFilterTemplate(this.filters);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
-  }
 }

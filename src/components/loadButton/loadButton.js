@@ -1,26 +1,20 @@
-import { createElement } from '../../utils';
+import { AbstractUiComponent } from '../../models/AbstractUiComponent/AbstractUiComponent';
 
 const createLoadButtonTemplate = () => `
    <button class="load-more" type="button">load more</button>
   `;
-export class LoadButton {
-
-   constructor() {
-      this._element = null;
-   }
+export class LoadButton extends AbstractUiComponent {
 
    getTemplate() {
       return createLoadButtonTemplate();
    }
 
-   getElement() {
-      if (!this._element) {
-         this._element = createElement(this.getTemplate());
-      }
-      return this._element;
+   setOnClickHandler(cb) {
+      this.getElement().addEventListener('click', cb);
    }
 
-   removeElement() {
-      this._element = null;
+   removeOnClickHandler(cb) {
+      this.getElement().removeEventListener('click', cb);
    }
+
 }

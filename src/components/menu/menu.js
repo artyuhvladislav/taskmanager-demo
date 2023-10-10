@@ -1,4 +1,4 @@
-import { createElement } from '../../utils';
+import { AbstractUiComponent } from '../../models/AbstractUiComponent/AbstractUiComponent';
 
 const createMenuTemplate = (title = 'NO TITLE') => `
   <section class="main__control control container">
@@ -7,22 +7,15 @@ const createMenuTemplate = (title = 'NO TITLE') => `
   </section>
   `;
 
-export class Menu {
+export class Menu extends AbstractUiComponent {
 
   constructor(title) {
+    super();
     this._title = title;
-    this._element = null;
   }
 
   getTemplate() {
     return createMenuTemplate(this._title);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
   }
 
   onAddNewTask() {
@@ -30,9 +23,6 @@ export class Menu {
     $addNewTaskBtn.addEventListener('click', () => { console.log('click add new task'); });
   }
 
-  removeElement() {
-    this._element = null;
-  }
 }
 
 
