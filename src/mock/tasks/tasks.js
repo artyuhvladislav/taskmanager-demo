@@ -11,7 +11,7 @@ export const task = {
         description: 'This is example of task edit. You can set date and chose repeating days and color.',
         color: COLORS[getRandomNumber(COLORS.length - 1)],
         dueDate: {
-          date: new Date(Date.now() + 10000)
+          date: new Date(Date.now() + Math.ceil(Math.random() * 1000000000))
         },
         repeatingDays: Object.assign({}, repeatingDays, {
           'mo': true
