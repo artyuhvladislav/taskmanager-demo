@@ -13,9 +13,7 @@ export const task = {
         dueDate: {
           date: new Date(Date.now() + Math.ceil(Math.random() * 1000000000))
         },
-        repeatingDays: Object.assign({}, repeatingDays, {
-          'mo': true
-        }),
+        repeatingDays: Object.assign({}, repeatingDays),
         isFavorite: Math.random() > 0.5,
         isArchive: Math.random() > 0.5,
       }
