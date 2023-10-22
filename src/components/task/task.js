@@ -1,10 +1,10 @@
-import { DEFAULT_COLOR, MONTHS } from '../../const';
+import dayjs from 'dayjs';
+import { DEFAULT_COLOR } from '../../const';
 import { AbstractUiComponent } from '../../models/AbstractUiComponent/AbstractUiComponent';
 
 const createTaskTemplate = (task) => {
   const { description, color, isFavorite, isArchive, repeatingDays, dueDate } = task;
-
-  const date = `${dueDate?.date.getDate()} ${MONTHS[dueDate?.date.getMonth()]}`;
+  const date = dayjs(dueDate.date).format('DD MMMM');
   const isExpired = dueDate.date < Date.now();
   const cardDeadline = isExpired ? 'card--deadline' : '';
   const cardRepeat = repeatingDays ? 'card--repeat' : '';
@@ -72,6 +72,16 @@ export class Task extends AbstractUiComponent {
   setOnClickHandler(cb) {
     const $editBtn = this.getElement().querySelector('.card__btn.card__btn--edit');
     $editBtn.addEventListener('click', cb);
+  }
+
+  setOnClickFavoritesHandler(cb) {
+    const $favoritesBtn = this.getElement().querySelector('.card__btn.card__btn--favorites');
+    $favoritesBtn.addEventListener('click', cb);
+  }
+
+  setOnClickArchiveHandler(cb) {
+    const $archiveBtn = this.getElement().querySelector('.card__btn.card__btn--archive');
+    $archiveBtn.addEventListener('click', cb);
   }
 
 }
