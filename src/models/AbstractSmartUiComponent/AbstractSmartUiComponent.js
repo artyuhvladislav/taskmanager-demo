@@ -11,7 +11,6 @@ export class AbstractSmartUiComponent extends AbstractUiComponent {
     throw new Error('recoveryListeners method has not implemented');
   }
   rerender() {
-    debugger;
     const oldElement = this.getElement();
     const parentElement = oldElement.parentElement;
     this.removeElement();
